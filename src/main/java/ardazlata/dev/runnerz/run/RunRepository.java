@@ -1,12 +1,14 @@
 package ardazlata.dev.runnerz.run;
 
 import jakarta.annotation.PostConstruct;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class RunRepository {
 
     private List<Run> runs = new ArrayList<>();
@@ -14,6 +16,16 @@ public class RunRepository {
     List<Run> findAll() {
         return runs;
     }
+
+    Run FindById(Integer id) {
+        return runs.stream()
+                .filter(run -> run.id().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
+
+
+
 
     @PostConstruct
     private void init() {
