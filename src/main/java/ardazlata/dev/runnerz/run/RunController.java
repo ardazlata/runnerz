@@ -23,6 +23,6 @@ public class RunController {
 
     @GetMapping("/{id}")
     public Run FindById(@PathVariable Integer id) {
-        return runRepository.FindById(id);
+        return runRepository.findById(id);
     }
 }
