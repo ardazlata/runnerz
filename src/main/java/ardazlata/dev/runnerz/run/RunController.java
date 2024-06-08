@@ -2,10 +2,7 @@ package ardazlata.dev.runnerz.run;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,6 +25,34 @@ public class RunController {
     public ResponseEntity<Run> findById(@PathVariable Integer id) {
         return runRepository.findById(id)
                 .map(run -> new ResponseEntity<>(run, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+
+    @PostMapping("")
+    public ResponseEntity<Run> createRun(@RequestBody Run run) {
+        runRepository.save(run);
+        return new ResponseEntity<>(run, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Run> updateRun(@PathVariable Integer id, @RequestBody Run run) {
+        return runRepository.findById(id)
+                .map(existingRun -> {
+                    Run updatedRun = new Run(id, run.title(), run.startedOn(), run.completedOn(), run.miles(), run.location());
+                    runRepository.save(updatedRun);
+                    return new ResponseEntity<>(updatedRun, HttpStatus.OK);
+                })
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteRun(@PathVariable Integer id) {
+        return runRepository.findById(id)
+                .map(run -> {
+                    runRepository.delete(run);
+                    return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+                })
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }

@@ -35,8 +35,8 @@ public class RunRepository {
 
     @PostConstruct
     private void init() {
-        runMap.put(1, new Run(1, "Morning Run", LocalDateTime.now(), LocalDateTime.now().plus(1, ChronoUnit.HOURS), 5, Location.OUTDOOR));
-        runMap.put(2, new Run(2, "Evening Run", LocalDateTime.now(), LocalDateTime.now().plus(1, ChronoUnit.HOURS), 3, Location.OUTDOOR));
+        runMap.put(1, new Run(1, "Morning Run", LocalDateTime.now(), LocalDateTime.now().plusHours(1), 5, Location.OUTDOOR));
+        runMap.put(2, new Run(2, "Evening Run", LocalDateTime.now(), LocalDateTime.now().plusHours(1), 3, Location.OUTDOOR));
     }
 
     /**
@@ -56,5 +56,13 @@ public class RunRepository {
         Optional<Run> runOptional = findById(id);
         Run run = runOptional.orElseGet(() -> new Run(0, "Default Run", LocalDateTime.now(), LocalDateTime.now(), 0, Location.INDOOR));
         System.out.println("Run: " + run);
+    }
+
+    public void save(Run run) {
+        runMap.put(run.id(), run);
+    }
+
+    public void delete(Run run) {
+        runMap.remove(run.id());
     }
 }
